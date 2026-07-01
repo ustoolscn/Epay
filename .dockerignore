@@ -1,0 +1,10 @@
+.git
+.github
+docs
+install/install.lock
+docker-compose.yml
+.env
+.env.*
+README.md
+IIS.txt
+nginx.txt

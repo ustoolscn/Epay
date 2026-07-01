@@ -58,3 +58,53 @@ Bepusdt 是适用于彩虹易支付系统的 USDT 收款插件，收到的货币
 
 ---
 
+## Docker 部署
+
+### GitHub Actions 自动构建镜像
+
+推送到 `main` 或 `master` 分支后，GitHub Actions 会自动构建镜像并推送到：
+
+`ghcr.io/<你的 GitHub 用户或组织>/<仓库名>`
+
+镜像标签包括：
+
+- `latest`
+- `YYYYMMDD-HHmm`
+- Git tag 名称（如果本次构建由 Git tag 触发）
+
+首次使用 GHCR 时，请确认仓库 `Actions` 具备写入 `Packages` 的权限。
+
+### 使用 docker-compose 部署
+
+1. 复制环境变量模板：
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. 修改 `.env` 中的镜像地址和外部 MySQL 参数：
+
+   - `IMAGE_NAME=ghcr.io/<你的 GitHub 用户或组织>/<仓库名>`
+   - `IMAGE_TAG=latest` 或具体时间标签
+   - `DB_HOST`、`DB_PORT`、`DB_NAME`、`DB_USER`、`DB_PASSWORD`、`DB_PREFIX`
+
+3. 启动服务：
+
+   ```bash
+   docker compose pull
+   docker compose up -d
+   ```
+
+4. 浏览器访问：
+
+   ```text
+   http://<服务器IP>:<APP_PORT>/install/
+   ```
+
+### 初始化数据库
+
+- 可以通过安装向导初始化数据库
+- 也可以手动导入 `install/install.sql`
+- 容器部署时数据库连接优先读取环境变量，`config.php` 作为兜底配置保留兼容
+- 初始化完成后，建议删除或限制 `install` 目录访问
+

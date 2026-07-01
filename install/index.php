@@ -58,13 +58,20 @@ if($step==3){
         );
         $config="<?php
     /*数据库配置*/
+    if(!function_exists('epay_env')) {
+        function epay_env(\$key, \$default = null) {
+            \$value = getenv(\$key);
+            return \$value === false || \$value === '' ? \$default : \$value;
+        }
+    }
+
     \$dbconfig=array(
-        'host' => '{$host}', //数据库服务器
-        'port' => {$port}, //数据库端口
-        'user' => '{$user}', //数据库用户名
-        'pwd' => '{$pwd}', //数据库密码
-        'dbname' => '{$database}', //数据库名
-        'dbqz' => '{$dbqz}' //数据表前缀
+        'host' => epay_env('DB_HOST', '{$host}'), //数据库服务器
+        'port' => (int)epay_env('DB_PORT', {$port}), //数据库端口
+        'user' => epay_env('DB_USER', '{$user}'), //数据库用户名
+        'pwd' => epay_env('DB_PASSWORD', '{$pwd}'), //数据库密码
+        'dbname' => epay_env('DB_NAME', '{$database}'), //数据库名
+        'dbqz' => epay_env('DB_PREFIX', '{$dbqz}') //数据表前缀
     );
     ";
     }
